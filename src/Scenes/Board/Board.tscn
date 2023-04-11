@@ -1,0 +1,10 @@
+[gd_scene load_steps=3 format=3 uid="uid://bkmyogcvadiot"]
+
+[ext_resource type="Script" path="res://Scenes/Board/Board.cs" id="1_kk4na"]
+[ext_resource type="PackedScene" uid="uid://fqxurxh6g1x3" path="res://Scenes/Cell/Cell.tscn" id="3_ptuqw"]
+
+[node name="Board" type="Node3D"]
+script = ExtResource("1_kk4na")
+Distance = 1.1
+CellScene = ExtResource("3_ptuqw")
+Radius = 2

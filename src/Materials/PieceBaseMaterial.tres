@@ -1,7 +1,0 @@
-[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://cou320kcfeuaw"]
-
-[ext_resource type="Shader" uid="uid://ddwtmnak74hcv" path="res://Materials/PieceBaseShader.tres" id="1_psl8l"]
-
-[resource]
-render_priority = 0
-shader = ExtResource("1_psl8l")

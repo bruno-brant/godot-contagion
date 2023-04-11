@@ -1,24 +1,36 @@
-@tool 
+@tool
 extends Node3D
+class_name Cell
 
 ## The current level of this piece.
-@export_range(0, 4, 1) var powerLevel: int = 0:
+@export_range(0, 4, 1) var power_level: int = 0:
 	set(level):
+		assert (0 <= power_level and power_level <= 4, "power_level must be between 0 and 4")
+
 		_set_visible_mesh(level)
-		powerLevel = level
+
+		power_level = level
 
 ## The color of this player (piece)
 @export var color: Color:
-	set(value): 
-		base_material.albedo_color = value
+	set(value):
+		_piece_material.albedo_color = value
 	get:
-		return base_material.albedo_color
+		return _piece_material.albedo_color
 
-var _powerLevel: int = 0
+## Return true if the current cell is at its max power
+var is_max_power: bool:
+	get: return power_level == len(_pieces) - 1
 
-var _currentPiece: MeshInstance3D = null
+## Returns true if the current cell is at its min power
+var is_min_power: bool:
+	get: return power_level == 0
 
-var base_material: BaseMaterial3D  = preload("res://Materials/SolicColorStandardMaterial.tres").duplicate()
+## The current displayed piece
+var _current_piece: MeshInstance3D = null
+
+## The material applied to the pieces in this cell
+var _piece_material: BaseMaterial3D  = preload("res://Scenes/Cell/Materials/SolidColorStandardMaterial.tres").duplicate()
 
 ## Maps each power level to a piece
 @onready var _pieces: Array[MeshInstance3D] = [
@@ -29,21 +41,32 @@ var base_material: BaseMaterial3D  = preload("res://Materials/SolicColorStandard
 	$Piece/Level4 as MeshInstance3D
 ]
 
+## Increase the cell power
+func increase_power():
+	if not is_max_power:
+		power_level += 1
+
+## Decrease the cell power
+func decrease_power():
+	if not is_min_power:
+		power_level -= 1
+
+# run when the node is ready
 func _ready():
 	_assign_material_to_piece_meshes()
-		
+
 # assign the base material to all pieces
 func _assign_material_to_piece_meshes():
 	for piece in _pieces:
 		if piece:
-			piece.material_override = base_material
+			piece.material_override = _piece_material
 
-# set the visible mesh accordingly to the powerlevel
+# set the visible mesh accordingly to the power_level
 func _set_visible_mesh(level: int):
-	if _currentPiece: 
-		_currentPiece.visible = false
-	
-	_currentPiece = _pieces[level]
-	
-	if _currentPiece:
-		_currentPiece.visible = true
+	if _current_piece:
+		_current_piece.visible = false
+
+	_current_piece = _pieces[level] if len(_pieces) > level else null
+
+	if _current_piece:
+		_current_piece.visible = true
