@@ -174,7 +174,7 @@ public class HexCoord
 	}
 
 	/// <inheritdoc/>
-	public override bool Equals([NotNullWhen(true)] object obj)
+	public override bool Equals([NotNullWhen(true)] object? obj)
 	{
 		if (obj is null)
 		{

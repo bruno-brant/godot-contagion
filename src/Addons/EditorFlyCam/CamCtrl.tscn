@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://ss8clyvkgetb"]
+
+[ext_resource type="Script" path="res://addons/EditorFlyCam/CamCtrl.gd" id="1"]
+
+[node name="CamCtrl" type="VBoxContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource("1")
+
+[node name="FollowEditor" type="CheckButton" parent="."]
+layout_mode = 2
+text = "Follow Editor Camera"
+
+[connection signal="toggled" from="FollowEditor" to="." method="_on_FollowEditor_toggled"]

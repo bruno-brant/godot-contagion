@@ -2,6 +2,9 @@
 
 namespace Contagion.Scenes.Board.Scripts;
 
+using System.Diagnostics;
+using Contagion.Scenes.Cell.Scripts;
+
 /// <summary>
 /// The board is a hexagonal grid of cells.
 /// </summary>
@@ -9,7 +12,7 @@ namespace Contagion.Scenes.Board.Scripts;
 public partial class Board : Node3D
 {
 	// Maps between cell coordinates and cell instances.
-	private readonly BidirectionalMap<HexCoord, Node3D> _coordToCellMap = new();
+	private readonly BidirectionalMap<HexCoord, Cell> _coordToCellMap = new();
 
 	// The radius of the board.
 	private int _currentRadius = 1;
@@ -21,19 +24,19 @@ public partial class Board : Node3D
 	/// Gets or sets the distance between cells.
 	/// </summary>
 	// TODO: Get cell radius from mesh geometry!
-	[Export]
+	[Export(PropertyHint.Range, "0.001, 10")]
 	public float Distance { get; set; } = 1f;
 
 	/// <summary>
 	/// Gets or sets cell resource to use for the board.
 	/// </summary>
 	[Export]
-	public PackedScene CellScene { get; set; }
+	public PackedScene? CellScene { get; set; }
 
 	/// <summary>
 	/// Gets or sets the radius of the board.
 	/// </summary>
-	[Export]
+	[Export(PropertyHint.Range, "1,1000,")]
 	public int Radius { get; set; } = 8;
 
 	/// <summary>
@@ -45,7 +48,7 @@ public partial class Board : Node3D
 	/// <returns>
 	/// A list of adjacent cells.
 	/// </returns>
-	public IEnumerable<Node3D> GetAdjacentCells(Node3D cell)
+	public IEnumerable<Cell> GetAdjacentCells(Cell cell)
 	{
 		if (!_coordToCellMap.TryGetValue(cell, out var coord))
 		{
@@ -95,7 +98,7 @@ public partial class Board : Node3D
 			var coord = toVisit.Dequeue();
 
 			// Check if we still are within Radius
-			if (coord.Length > Radius)
+			if (coord.Length >= Radius)
 			{
 				continue;
 			}
@@ -140,12 +143,40 @@ public partial class Board : Node3D
 	/// </param>
 	private void AddCell(HexCoord coord)
 	{
-		var cell = CellScene.Instantiate<Node3D>();
+		Debug.Assert(CellScene != null, $"{nameof(CellScene)} must be set in the designer!");
+
+		var cell = CellScene.Instantiate<Cell>();
 
 		cell.Name = $"Cell_{coord}";
 
-		AddChild(cell);
+		var rigidBody = new StaticBody3D();
 
-		cell.Translate(coord.ToVector(Distance));
+		rigidBody.AddChild(cell);
+
+		AddChild(rigidBody);
+
+		rigidBody.Translate(coord.ToVector(Distance));
+
+		rigidBody.InputEvent += (camera, @event, position, normal, shapeIdx) => CellClicked(cell, @event);
+	}
+
+	private void CellClicked(Cell cell, InputEvent @event)
+	{
+		GD.Print($"Clicked cell {cell.Name}");
+
+		if (@event is not InputEventMouse eventMouse)
+		{
+			return;
+		}
+
+		// check if the left mouse button was pressed
+		if (!eventMouse.ButtonMask.HasFlag(MouseButtonMask.Left))
+		{
+			return;
+		}
+
+		var effect = new SpreadPowerEffect(new PowerLevel(1), this);
+
+		effect.Apply(cell);
 	}
 }

@@ -1,4 +1,4 @@
-﻿// Copyright (c) Bruno Brant. All rights reserved.
+// Copyright (c) Bruno Brant. All rights reserved.
 
 namespace Contagion;
 
@@ -12,6 +12,8 @@ namespace Contagion;
 /// The type of the second object.
 /// </typeparam>
 public class BidirectionalMap<T1, T2>
+	where T1 : notnull
+	where T2 : notnull
 {
 	// Maps from T1 to T2.
 	private readonly Dictionary<T1, T2> _map1 = new();
@@ -48,7 +50,7 @@ public class BidirectionalMap<T1, T2>
 	/// <returns>
 	/// The key mapped from key1.
 	/// </returns>
-	public T2 Get(T1 key1)
+	public T2? Get(T1 key1)
 	{
 		if (_map1.TryGetValue(key1, out var key2))
 		{
@@ -67,7 +69,7 @@ public class BidirectionalMap<T1, T2>
 	/// <returns>
 	/// The key mapped from key1.
 	/// </returns>
-	public T1 Get(T2 key2)
+	public T1? Get(T2 key2)
 	{
 		if (_map2.TryGetValue(key2, out var key1))
 		{
@@ -91,7 +93,7 @@ public class BidirectionalMap<T1, T2>
 	/// </returns>
 	public bool TryGetValue(T1 key1, out T2 key2)
 	{
-		return _map1.TryGetValue(key1, out key2);
+		return _map1.TryGetValue(key1, out key2!);
 	}
 
 	/// <summary>
@@ -108,6 +110,6 @@ public class BidirectionalMap<T1, T2>
 	/// </returns>
 	public bool TryGetValue(T2 key2, out T1 key1)
 	{
-		return _map2.TryGetValue(key2, out key1);
+		return _map2.TryGetValue(key2, out key1!);
 	}
 }
