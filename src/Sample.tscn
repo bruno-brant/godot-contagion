@@ -1,0 +1,13 @@
+[gd_scene load_steps=3 format=3 uid="uid://cvx150vpx7mvq"]
+
+[ext_resource type="PackedScene" uid="uid://bkmyogcvadiot" path="res://Scenes/Board/Board.tscn" id="1_raa0u"]
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_3yd0t"]
+size = Vector2(100, 100)
+
+[node name="Root" type="Node"]
+
+[node name="Board" parent="." instance=ExtResource("1_raa0u")]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("PlaneMesh_3yd0t")

@@ -5,13 +5,21 @@ VisualStudioVersion = 17.5.33516.290
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contagion", "Contagion.csproj", "{36087B07-E7CF-4A37-98BE-A90E9C50A8FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Contagion.Tests", "..\Contagion.Tests\Contagion.Tests.csproj", "{08AE6274-A734-4B04-9A76-834986D005BD}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E2A92ADB-DB56-4F7B-B270-FD0DE30F7B18}"
 	ProjectSection(SolutionItems) = preProject
-		.editorconfig = .editorconfig
+		..\.editorconfig = ..\.editorconfig
 		.gitignore = .gitignore
+		stylecop.json = stylecop.json
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{ED1A41BE-1542-4F09-B60E-0614827EC5C1}"
+	ProjectSection(SolutionItems) = preProject
+		..\tests\.editorconfig = ..\tests\.editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Contagion.Tests", "C:\Users\heavy\source\repos\games\contagion\tests\Contagion.Tests\Contagion.Tests.csproj", "{57168424-CDDD-4323-83CE-5BEDA02CC193}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C20EAAA2-592F-4170-A54A-F2783AF62A28}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,17 +37,21 @@ Global
 		{36087B07-E7CF-4A37-98BE-A90E9C50A8FA}.ExportRelease|Any CPU.Build.0 = ExportRelease|Any CPU
 		{36087B07-E7CF-4A37-98BE-A90E9C50A8FA}.Release|Any CPU.ActiveCfg = ExportRelease|Any CPU
 		{36087B07-E7CF-4A37-98BE-A90E9C50A8FA}.Release|Any CPU.Build.0 = ExportRelease|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{08AE6274-A734-4B04-9A76-834986D005BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.ExportDebug|Any CPU.ActiveCfg = Debug|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.ExportDebug|Any CPU.Build.0 = Debug|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.ExportRelease|Any CPU.ActiveCfg = Release|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.ExportRelease|Any CPU.Build.0 = Release|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{57168424-CDDD-4323-83CE-5BEDA02CC193}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{36087B07-E7CF-4A37-98BE-A90E9C50A8FA} = {C20EAAA2-592F-4170-A54A-F2783AF62A28}
+		{57168424-CDDD-4323-83CE-5BEDA02CC193} = {ED1A41BE-1542-4F09-B60E-0614827EC5C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {496E02B4-D977-4882-8836-A6230F45BF70}

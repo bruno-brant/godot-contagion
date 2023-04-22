@@ -5,6 +5,6 @@
 
 [node name="Board" type="Node3D"]
 script = ExtResource("1_kk4na")
-Distance = 1.1
+Distance = 1.05
 CellScene = ExtResource("3_ptuqw")
 Radius = 2
