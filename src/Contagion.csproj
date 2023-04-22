@@ -6,6 +6,7 @@
 		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
 		<AnalysisLevel>6.0</AnalysisLevel>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<Nullable>enable</Nullable>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -17,6 +18,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="Microsoft.CodeAnalysis.Common" Version="4.5.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.NetAnalyzers" Version="7.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

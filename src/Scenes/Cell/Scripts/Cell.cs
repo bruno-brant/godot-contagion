@@ -2,6 +2,8 @@
 
 namespace Contagion.Scenes.Cell.Scripts;
 
+using Contagion.Scenes.Board.Scripts;
+
 /// <summary>
 /// A cell in the game board.
 /// </summary>
@@ -15,30 +17,23 @@ public partial class Cell : Node3D
 	private int _powerLevel = 0;
 
 	// The pieces that make up the cell.
-	private MeshInstance3D[] _pieces;
+	private MeshInstance3D?[]? _pieces;
 
 	// The current piece being displayed.
-	private MeshInstance3D _current_piece;
+	private MeshInstance3D? _currentPiece;
 
 	/// <summary>
-	/// Gets or sets the power level of the cell.
+	/// Initializes a new instance of the <see cref="Cell"/> class.
 	/// </summary>
-	[Export]
-	public int PowerLevel
+	public Cell()
 	{
-		get => _powerLevel;
-
-		set
-		{
-			if (value is < 0 or > 4)
-			{
-				throw new Exception("power_level must be between 0 and 4");
-			}
-
-			SetVisibleMesh(value);
-			_powerLevel = value;
-		}
+		PowerLevel.LevelChanged += newLevel => SetVisibleMesh(newLevel);
 	}
+
+	/// <summary>
+	/// Gets the power level of the cell.
+	/// </summary>
+	public PowerLevel PowerLevel { get; } = new PowerLevel(PowerLevel.MinPowerLevel);
 
 	/// <summary>
 	/// Gets or sets the color of the cell.
@@ -50,45 +45,13 @@ public partial class Cell : Node3D
 		set { _piece_material.AlbedoColor = value; }
 	}
 
-	/// <summary>
-	/// Gets a value indicating whether the cell is at maximum power.
-	/// </summary>
-	public bool IsMaxPower => _powerLevel == _pieces.Length - 1;
-
-	/// <summary>
-	/// Gets a value indicating whether the cell is at minimum power.
-	/// </summary>
-	public bool IsMinPower => _powerLevel == 0;
-
-	/// <summary>
-	/// Increases the power of the cell by one.
-	/// </summary>
-	public void IncreasePower()
-	{
-		if (!IsMaxPower)
-		{
-			PowerLevel++;
-		}
-	}
-
-	/// <summary>
-	/// Descreases the power of the cell by one.
-	/// </summary>
-	public void DecreasePower()
-	{
-		if (!IsMinPower)
-		{
-			PowerLevel--;
-		}
-	}
-
 	/// <inheritdoc/>
 	public override void _Ready()
 	{
-		_pieces = new MeshInstance3D[]
+		_pieces = new MeshInstance3D?[]
 		{
 			null,
-			(MeshInstance3D)GetNode("Piece/Level1"),
+			GetNode<MeshInstance3D>("Piece/Level1"),
 			(MeshInstance3D)GetNode("Piece/Level2"),
 			(MeshInstance3D)GetNode("Piece/Level3"),
 			(MeshInstance3D)GetNode("Piece/Level4"),
@@ -99,6 +62,11 @@ public partial class Cell : Node3D
 
 	private void AssignMaterialToPieceMeshes()
 	{
+		if (_pieces == null)
+		{
+			return;
+		}
+
 		foreach (var piece in _pieces)
 		{
 			if (piece != null)
@@ -110,16 +78,21 @@ public partial class Cell : Node3D
 
 	private void SetVisibleMesh(int level)
 	{
-		if (_current_piece != null)
+		if (_pieces == null)
 		{
-			_current_piece.Visible = false;
+			return;
 		}
 
-		_current_piece = level < _pieces.Length ? _pieces[level] : null;
-
-		if (_current_piece != null)
+		if (_currentPiece != null)
 		{
-			_current_piece.Visible = true;
+			_currentPiece.Visible = false;
+		}
+
+		_currentPiece = level < _pieces.Length ? _pieces[level] : null;
+
+		if (_currentPiece != null)
+		{
+			_currentPiece.Visible = true;
 		}
 	}
 }

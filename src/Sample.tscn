@@ -7,7 +7,14 @@ size = Vector2(100, 100)
 
 [node name="Root" type="Node"]
 
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)
+projection = 1
+current = true
+size = 25.0
+
 [node name="Board" parent="." instance=ExtResource("1_raa0u")]
+Radius = 4
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="."]
 mesh = SubResource("PlaneMesh_3yd0t")
