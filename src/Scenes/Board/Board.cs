@@ -8,6 +8,9 @@ namespace Contagion.Scenes.Board.Scripts;
 [Tool]
 public partial class Board : Node3D
 {
+	// Maps between cell coordinates and cell instances.
+	private readonly BidirectionalMap<HexCoord, Node3D> _coordToCellMap = new();
+
 	// The radius of the board.
 	private int _currentRadius = 1;
 
@@ -32,6 +35,31 @@ public partial class Board : Node3D
 	/// </summary>
 	[Export]
 	public int Radius { get; set; } = 8;
+
+	/// <summary>
+	/// Returns a list of adjacent cells to the informed cell.
+	/// </summary>
+	/// <param name="cell">
+	/// The cell to get the adjacent cells from.
+	/// </param>
+	/// <returns>
+	/// A list of adjacent cells.
+	/// </returns>
+	public IEnumerable<Node3D> GetAdjacentCells(Node3D cell)
+	{
+		if (!_coordToCellMap.TryGetValue(cell, out var coord))
+		{
+			throw new Exception("The cell wasn't part of the board!");
+		}
+
+		foreach (var neighborCoord in coord.GetNeighbors())
+		{
+			if (_coordToCellMap.TryGetValue(neighborCoord, out var neighborCell))
+			{
+				yield return neighborCell;
+			}
+		}
+	}
 
 	/// <inheritdoc/>
 	public override void _Process(double delta)
@@ -120,26 +148,4 @@ public partial class Board : Node3D
 
 		cell.Translate(coord.ToVector(Distance));
 	}
-
-	///// <summary>
-	///// Returns a list of adjacent cells to the informed cell. 
-	///// </summary>
-	///// <param name="cell">
-	///// The cell to get the adjacent cells from.
-	///// </param>
-	///// <returns>
-	///// A list of adjacent cells.
-	///// </returns>
-	//public IEnumerable<Node3D> GetAdjacentCells(Node3D cell)
-	//{
-	//	var coord = cell.Get("coord");
-	//	foreach (var neighborCoord in coord.GetNeighbors())
-	//	{
-	//		var neighborCell = GetNode<Node3D>($"Cell_{neighborCoord}");
-	//		if (neighborCell != null)
-	//		{
-	//			yield return neighborCell;
-	//		}
-	//	}
-	//}
 }
