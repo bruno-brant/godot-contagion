@@ -3,6 +3,7 @@
 namespace Contagion.Scenes.Board.Scripts;
 
 using System.Diagnostics;
+using Contagion.Assets.Scripts;
 using Contagion.Scenes.Cell.Scripts;
 
 /// <summary>

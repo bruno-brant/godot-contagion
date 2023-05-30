@@ -3,6 +3,8 @@
 ## General Settings ##
 
 charset = utf-8
+indent_style = tabs
+end_of_line = crlf
 
 ## StyleCop Analyzer ##
 
@@ -17,6 +19,9 @@ dotnet_diagnostic.SA1309.severity = none
 
 # SA1512: Single-line comments must not be followed by a blank line - Yeah when commenting out code
 dotnet_diagnostic.SA1512.severity = none
+
+# SA1028: Code must not contain trailing whitespace - Every time you hit enter, you get a new line with trailing whitespace, it's annoying
+dotnet_diagnostic.SA1028.severity = none
 
 ## Code Analysis ##
 
