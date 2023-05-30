@@ -1,6 +1,6 @@
 // Copyright (c) Bruno Brant. All rights reserved.
 
-namespace Contagion;
+namespace Contagion.Assets.Scripts;
 
 /// <summary>
 /// Allows to associate between pairs of objects and retrieve them in both directions.

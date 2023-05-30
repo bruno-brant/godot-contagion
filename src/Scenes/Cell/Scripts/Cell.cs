@@ -39,10 +39,28 @@ public partial class Cell : Node3D
 	/// Gets or sets the color of the cell.
 	/// </summary>
 	[Export]
-	public Color Color
+	public Color PieceColor 
 	{
 		get { return _piece_material.AlbedoColor; }
 		set { _piece_material.AlbedoColor = value; }
+	}
+
+	/// <summary>
+	/// Sets the cell to be highlighted.
+	/// </summary>
+	/// <seealso cref="Dim"/>
+	public void Highlight()
+	{
+		_piece_material.EmissionEnabled = true;
+	}
+
+	/// <summary>
+	/// Sets the cell to not be highlighted.
+	/// </summary>
+	/// <seealso cref="Highlight"/>"
+	public void Dim()
+	{
+		_piece_material.EmissionEnabled = false;
 	}
 
 	/// <inheritdoc/>
