@@ -3,6 +3,8 @@
 namespace Contagion.Scenes.Board.Scripts;
 
 using System.Diagnostics;
+using Contagion.Scenes.Cell.Scripts;
+using Godot;
 
 /// <summary>
 /// Encapulates the rules for increasing power of cells.
@@ -26,7 +28,7 @@ public class PowerLevel
 	/// Initializes a new instance of the <see cref="PowerLevel"/> class.
 	/// </summary>
 	/// <param name="level">The level of power to initialize this to.</param>
-	public PowerLevel(int level)
+	public PowerLevel(int level = MinPowerLevel)
 	{
 		if (level is < MinPowerLevel or > MaxPowerLevel)
 		{
@@ -40,7 +42,8 @@ public class PowerLevel
 	/// Delegate for the <see cref="LevelChanged"/> event.
 	/// </summary>
 	/// <param name="level">The new level of power.</param>
-	public delegate void LevelChangedEventHandler(int level);
+	/// <param name="player">The player that applied the power.</param>
+	public delegate void LevelChangedEventHandler(int level, Player player);
 
 	/// <summary>
 	/// Event raised when the level of power changes.
@@ -53,6 +56,16 @@ public class PowerLevel
 	public int Level { get; private set; }
 
 	/// <summary>
+	/// Gets the percent of the power that was charged. Only charged powers can be used.
+	/// </summary>
+	public float PercentCharged { get; internal set; } = 0.75f;
+
+	/// <summary>
+	/// Gets a value indicating whether the power is charged and ready to use.
+	/// </summary>
+	public bool IsCharged => PercentCharged >= 1;
+
+	/// <summary>
 	/// Checks if the cell can be affected by this power effect.
 	/// </summary>
 	/// <param name="other">
@@ -63,7 +76,7 @@ public class PowerLevel
 	/// </returns>
 	public bool CanApply(PowerLevel other)
 	{
-		Debug.Assert(other.Level == MinPowerLevel, $"Can never apply a {nameof(PowerLevel)} of minimum power.");
+		Debug.Assert(other.Level != MinPowerLevel, $"Can never apply a {nameof(PowerLevel)} of minimum power.");
 
 		return Level != MaxPowerLevel && Level < other.Level;
 	}
@@ -74,9 +87,12 @@ public class PowerLevel
 	/// <param name="powerLevel">
 	/// The power to absorb.
 	/// </param>
-	public void Apply(PowerLevel powerLevel)
+	/// <param name="player">
+	/// The player that's applying the power.
+	/// </param>
+	public void Apply(PowerLevel powerLevel, Player player)
 	{
-		Debug.Assert(CanApply(powerLevel), $"Can't apply power with level = {powerLevel.Level}");
+		Debug.Assert(CanApply(powerLevel), $"Can't apply power with level '{powerLevel.Level}'.");
 
 		if (Level == powerLevel.Level)
 		{
@@ -87,7 +103,7 @@ public class PowerLevel
 			Level = powerLevel.Level;
 		}
 
-		LevelChanged?.Invoke(Level);
+		LevelChanged?.Invoke(Level, player);
 	}
 
 	/// <summary>

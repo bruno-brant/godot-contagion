@@ -2,25 +2,68 @@
 
 namespace Contation.Scenes.PlayerController;
 
+using Contagion.Scenes.Board.Scripts;
 using Contagion.Scenes.Cell.Scripts;
-using Microsoft.VisualBasic;
+using System.Diagnostics;
 
 /// <summary>
 /// Centralizes the processing of player input.
 /// </summary>
 public partial class PlayerController : Node3D
 {
+	/// <summary>
+	/// Used in debug to draw a ray on the cursor position.
+	/// </summary>
 	private const float RayLength = 10000.0f;
 
+	/// <summary>
+	/// The currently "selected" cell (i.e., the cell under the cursor).
+	/// </summary>
 	private Cell? _selectedCell;
+
+	/// <summary>
+	/// The material used to draw the ray.
+	/// </summary>
 	private StandardMaterial3D _redMaterial = new() { AlbedoColor = Colors.Red };
+
+	/// <summary>
+	/// Gets or sets the color for the player.
+	/// </summary>
+	public Player? CurrentPlayer { get; set; }
 
 	/// <inheritdoc/>
 	public override void _Input(InputEvent @event)
 	{
+		Debug.Assert(CurrentPlayer != null, "Player must be always set in the controller");
+
 		if (@event is InputEventMouse eventMouse)
 		{
 			HighlightMouseOver(eventMouse.Position);
+		}
+
+		if (@event.IsActionReleased("ApplyPower"))
+		{
+			ApplyPowerToCell();
+		}
+	}
+
+	private void ApplyPowerToCell()
+	{
+		Debug.Assert(CurrentPlayer != null, "Player must be always set in the controller");
+		
+		GD.Print("Applying power...");
+
+		if (_selectedCell == null)
+		{
+			return;
+		}
+
+		// Apply the power to the cell
+		var powerLevel = new PowerLevel(_selectedCell.PowerLevel.Level + 1);
+
+		if (_selectedCell.PowerLevel.CanApply(powerLevel))
+		{
+			_selectedCell.PowerLevel.Apply(powerLevel, CurrentPlayer);
 		}
 	}
 

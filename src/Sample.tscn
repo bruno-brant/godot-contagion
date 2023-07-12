@@ -1,11 +1,20 @@
-[gd_scene load_steps=5 format=3 uid="uid://cvx150vpx7mvq"]
+[gd_scene load_steps=10 format=3 uid="uid://cmfpre51tmpnv"]
 
 [ext_resource type="PackedScene" uid="uid://bkmyogcvadiot" path="res://Scenes/Board/Board.tscn" id="1_raa0u"]
 [ext_resource type="Script" path="res://Scenes/PlayerController/PlayerController.cs" id="2_6bin0"]
+[ext_resource type="PackedScene" uid="uid://cvw0iml6j708j" path="res://Scenes/Player/Player.tscn" id="2_urog4"]
+[ext_resource type="Script" path="res://PowerList.cs" id="3_20t7e"]
+[ext_resource type="Material" uid="uid://b70te21de5t6p" path="res://Materials/ChargingPowerMaterial.tres" id="4_lrf83"]
+[ext_resource type="Shader" uid="uid://omadludn5esr" path="res://Power.tres" id="4_snx1p"]
 
 [sub_resource type="Environment" id="Environment_e0t8f"]
 background_color = Color(0.945098, 0.909804, 0.701961, 1)
 background_energy_multiplier = 1.2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hphnj"]
+shader = ExtResource("4_snx1p")
+shader_parameter/FloatParameter = 1.39
+shader_parameter/ColorParameter = Color(1, 1, 1, 1)
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_g52g7"]
 
@@ -20,6 +29,31 @@ size = 25.0
 
 [node name="Board" parent="." instance=ExtResource("1_raa0u")]
 Radius = 4
+
+[node name="Players" type="Node" parent="."]
+
+[node name="Player1" parent="Players" instance=ExtResource("2_urog4")]
+Color = Color(0.92549, 0, 0, 1)
+
+[node name="HUD" type="CanvasLayer" parent="Players/Player1"]
+
+[node name="PowerList" type="GridContainer" parent="Players/Player1/HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_20t7e")
+ItemMaterial = ExtResource("4_lrf83")
+
+[node name="Label" type="Label" parent="Players/Player1/HUD/PowerList"]
+material = SubResource("ShaderMaterial_hphnj")
+layout_mode = 2
+text = "Power 1"
+
+[node name="Label2" type="Label" parent="Players/Player1/HUD/PowerList"]
+layout_mode = 2
+text = "Power 2"
 
 [node name="PlayerController" type="Node3D" parent="."]
 script = ExtResource("2_6bin0")

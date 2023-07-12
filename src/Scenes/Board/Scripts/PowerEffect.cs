@@ -2,32 +2,35 @@
 
 namespace Contagion.Scenes.Board.Scripts;
 
+using System.Diagnostics;
 using Contagion.Scenes.Cell.Scripts;
 
 /// <summary>
 /// Applies to a cell, and spreads the power to all adjacent cells.
 /// </summary>
-public class SpreadPowerEffect
+public class PowerEffect
 {
-	// The power level of this effect.
-	private readonly PowerLevel _powerLevel;
-
-	// The board to apply the power to.
-	private readonly Board _board;
+	// The player that's applying the power.
+	private readonly Player _player;
 
 	// What cells have already been affected by this power effect.
 	private readonly HashSet<Cell> _affectedCells = new();
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="SpreadPowerEffect"/> class.
+	/// Initializes a new instance of the <see cref="PowerEffect"/> class.
 	/// </summary>
 	/// <param name="powerLevel">The power level of this effect.</param>
-	/// <param name="board">The board to apply the power to.</param>
-	public SpreadPowerEffect(PowerLevel powerLevel, Board board)
+	/// <param name="player">The player that's applying the power.</param>
+	public PowerEffect(PowerLevel powerLevel, Player player)
 	{
-		_powerLevel = powerLevel;
-		_board = board;
+		PowerLevel = powerLevel;
+		_player = player;
 	}
+
+	/// <summary>
+	/// Gets the power level of this effect.
+	/// </summary>
+	public PowerLevel PowerLevel { get; init; }
 
 	/// <summary>
 	/// Applies the power effect to a cell.
@@ -37,12 +40,9 @@ public class SpreadPowerEffect
 	/// </param>
 	public void Apply(Cell cell)
 	{
-		if (!cell.PowerLevel.CanApply(_powerLevel))
-		{
-			throw new InvalidOperationException($"Can't apply this PowerLevel to cell {cell.Name}!");
-		}
+		Debug.Assert(cell.PowerLevel.CanApply(PowerLevel), $"Can't apply this PowerLevel to cell {cell.Name}!");
 
-		cell.PowerLevel.Apply(_powerLevel);
+		cell.PowerLevel.Apply(PowerLevel, _player);
 
 		SpreadToNeighbors(cell);
 	}
@@ -70,14 +70,14 @@ public class SpreadPowerEffect
 		}
 
 		// Apply power to adjacent cells.
-		foreach (var adjacentCell in _board.GetAdjacentCells(from))
+		foreach (var adjacentCell in from.Board.GetAdjacentCells(from))
 		{
-			adjacentCell.PowerLevel.Apply(spreadPower);
+			adjacentCell.PowerLevel.Apply(spreadPower, _player);
 
 			_affectedCells.Add(adjacentCell);
 		}
 
-		foreach (var adjacentCell in _board.GetAdjacentCells(from))
+		foreach (var adjacentCell in from.Board.GetAdjacentCells(from))
 		{
 			SpreadToNeighbors(adjacentCell);
 		}

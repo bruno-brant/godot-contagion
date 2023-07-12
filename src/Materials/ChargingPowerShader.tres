@@ -1,0 +1,87 @@
+[gd_resource type="VisualShader" load_steps=6 format=3 uid="uid://omadludn5esr"]
+
+[sub_resource type="VisualShaderNodeInput" id="VisualShaderNodeInput_kljf0"]
+expanded_output_ports = [0]
+input_name = "uv"
+
+[sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_1ufpv"]
+parameter_name = "FloatParameter"
+default_value_enabled = true
+default_value = 0.5
+
+[sub_resource type="VisualShaderNodeColorParameter" id="VisualShaderNodeColorParameter_ugdu8"]
+parameter_name = "Color"
+default_value_enabled = true
+default_value = Color(1, 1, 0, 1)
+
+[sub_resource type="VisualShaderNodeIf" id="VisualShaderNodeIf_5p1o8"]
+output_port_for_preview = 0
+
+[sub_resource type="VisualShaderNodeColorConstant" id="VisualShaderNodeColorConstant_oua0p"]
+constant = Color(0.00820202, 0.00820202, 0.00820202, 1)
+
+[resource]
+code = "shader_type canvas_item;
+render_mode blend_mix;
+
+uniform float FloatParameter = 0.5;
+uniform vec4 Color : source_color = vec4(1.000000, 1.000000, 0.000000, 1.000000);
+
+
+
+void fragment() {
+// Input:3
+	vec2 n_out3p0 = UV;
+	float n_out3p1 = n_out3p0.r;
+
+
+// FloatParameter:6
+	float n_out6p0 = FloatParameter;
+
+
+// ColorParameter:7
+	vec4 n_out7p0 = Color;
+
+
+// ColorConstant:9
+	vec4 n_out9p0 = vec4(0.008202, 0.008202, 0.008202, 1.000000);
+
+
+	vec3 n_out8p0;
+// If:8
+	float n_in8p2 = 0.00001;
+	if(abs(n_out3p1 - n_out6p0) < n_in8p2)
+	{
+		n_out8p0 = vec3(n_out7p0.xyz);
+	}
+	else if(n_out3p1 < n_out6p0)
+	{
+		n_out8p0 = vec3(n_out7p0.xyz);
+	}
+	else
+	{
+		n_out8p0 = vec3(n_out9p0.xyz);
+	}
+
+
+// Output:0
+	COLOR.rgb = n_out8p0;
+
+
+}
+"
+graph_offset = Vector2(20.9386, 56.9998)
+mode = 1
+flags/light_only = false
+nodes/fragment/0/position = Vector2(1200, 280)
+nodes/fragment/3/node = SubResource("VisualShaderNodeInput_kljf0")
+nodes/fragment/3/position = Vector2(300, 100)
+nodes/fragment/6/node = SubResource("VisualShaderNodeFloatParameter_1ufpv")
+nodes/fragment/6/position = Vector2(340, 260)
+nodes/fragment/7/node = SubResource("VisualShaderNodeColorParameter_ugdu8")
+nodes/fragment/7/position = Vector2(340, 580)
+nodes/fragment/8/node = SubResource("VisualShaderNodeIf_5p1o8")
+nodes/fragment/8/position = Vector2(820, 300)
+nodes/fragment/9/node = SubResource("VisualShaderNodeColorConstant_oua0p")
+nodes/fragment/9/position = Vector2(360, 480)
+nodes/fragment/connections = PackedInt32Array(6, 0, 8, 1, 7, 0, 8, 5, 9, 0, 8, 4, 7, 0, 8, 3, 3, 1, 8, 0, 8, 0, 0, 0)

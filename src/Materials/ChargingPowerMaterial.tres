@@ -1,0 +1,8 @@
+[gd_resource type="ShaderMaterial" load_steps=2 format=3 uid="uid://b70te21de5t6p"]
+
+[ext_resource type="Shader" uid="uid://omadludn5esr" path="res://ChargingPowerShader.tres" id="1_cih38"]
+
+[resource]
+shader = ExtResource("1_cih38")
+shader_parameter/FloatParameter = 0.5
+shader_parameter/ColorParameter = Color(1, 1, 0, 1)

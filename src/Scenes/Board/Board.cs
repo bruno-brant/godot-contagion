@@ -150,34 +150,8 @@ public partial class Board : Node3D
 
 		cell.Name = $"Cell_{coord}";
 
-		var rigidBody = new StaticBody3D();
+		AddChild(cell);
 
-		rigidBody.AddChild(cell);
-
-		AddChild(rigidBody);
-
-		rigidBody.Translate(coord.ToVector(Distance));
-
-		rigidBody.InputEvent += (camera, @event, position, normal, shapeIdx) => CellClicked(cell, @event);
-	}
-
-	private void CellClicked(Cell cell, InputEvent @event)
-	{
-		GD.Print($"Clicked cell {cell.Name}");
-
-		if (@event is not InputEventMouse eventMouse)
-		{
-			return;
-		}
-
-		// check if the left mouse button was pressed
-		if (!eventMouse.ButtonMask.HasFlag(MouseButtonMask.Left))
-		{
-			return;
-		}
-
-		var effect = new SpreadPowerEffect(new PowerLevel(1), this);
-
-		effect.Apply(cell);
+		cell.Translate(coord.ToVector(Distance));
 	}
 }

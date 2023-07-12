@@ -8,41 +8,64 @@ using Contagion.Scenes.Board.Scripts;
 /// A cell in the game board.
 /// </summary>
 [Tool]
-public partial class Cell : Node3D
+public partial class Cell : StaticBody3D
 {
 	// The material used for the cell pieces.
-	private readonly BaseMaterial3D _piece_material = (BaseMaterial3D)GD.Load("res://Scenes/Cell/Materials/SolidColorStandardMaterial.tres").Duplicate();
-
-	// Current power level of the cell.
-	private int _powerLevel = 0;
+	private readonly BaseMaterial3D _pieceMaterial = (BaseMaterial3D)GD.Load("res://Scenes/Cell/Materials/SolidColorStandardMaterial.tres").Duplicate();
 
 	// The pieces that make up the cell.
-	private MeshInstance3D?[]? _pieces;
+	private readonly List<MeshInstance3D?> _pieces = new();
 
 	// The current piece being displayed.
 	private MeshInstance3D? _currentPiece;
+
+	// The player that owns this cell.
+	private Player? _player = null;
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="Cell"/> class.
 	/// </summary>
 	public Cell()
 	{
-		PowerLevel.LevelChanged += newLevel => SetVisibleMesh(newLevel);
+		PowerLevel.LevelChanged += (newLevel, player) =>
+		{
+			_player = player;
+			SetVisibleMesh(newLevel);
+			EmitSignal(nameof(PowerLevelChangedEventHandler), newLevel);
+		};
 	}
+
+	/// <summary>
+	/// Event raised when the power level of the cell changes.
+	/// </summary>
+	/// <param name="newLevel">
+	/// The new level of power of the cell.
+	/// </param>
+	[Signal]
+	public delegate void PowerLevelChangedEventHandler(int newLevel);
+
+	/// <summary>
+	/// Gets the board this cell belongs to.
+	/// </summary>
+	public Board Board => GetParent<Board>();
 
 	/// <summary>
 	/// Gets the power level of the cell.
 	/// </summary>
-	public PowerLevel PowerLevel { get; } = new PowerLevel(PowerLevel.MinPowerLevel);
+	public PowerLevel PowerLevel { get; } = new();
 
 	/// <summary>
-	/// Gets or sets the color of the cell.
+	/// Gets or sets the player that owns this cell.
 	/// </summary>
-	[Export]
-	public Color PieceColor 
+	public Player? Player
 	{
-		get { return _piece_material.AlbedoColor; }
-		set { _piece_material.AlbedoColor = value; }
+		get => _player;
+
+		set
+		{
+			_player = value;
+			_pieceMaterial.AlbedoColor = _player?.Color ?? Colors.Gray;
+		}
 	}
 
 	/// <summary>
@@ -51,7 +74,7 @@ public partial class Cell : Node3D
 	/// <seealso cref="Dim"/>
 	public void Highlight()
 	{
-		_piece_material.EmissionEnabled = true;
+		_pieceMaterial.EmissionEnabled = true;
 	}
 
 	/// <summary>
@@ -60,53 +83,51 @@ public partial class Cell : Node3D
 	/// <seealso cref="Highlight"/>"
 	public void Dim()
 	{
-		_piece_material.EmissionEnabled = false;
+		_pieceMaterial.EmissionEnabled = false;
 	}
 
 	/// <inheritdoc/>
 	public override void _Ready()
 	{
-		_pieces = new MeshInstance3D?[]
+		_pieces.AddRange(new MeshInstance3D?[]
 		{
 			null,
 			GetNode<MeshInstance3D>("Piece/Level1"),
-			(MeshInstance3D)GetNode("Piece/Level2"),
-			(MeshInstance3D)GetNode("Piece/Level3"),
-			(MeshInstance3D)GetNode("Piece/Level4"),
-		};
+			GetNode<MeshInstance3D>("Piece/Level2"),
+			GetNode<MeshInstance3D>("Piece/Level3"),
+			GetNode<MeshInstance3D>("Piece/Level4"),
+		});
+
+		foreach (var piece in _pieces)
+		{
+			if (piece != null)
+			{
+				piece.Visible = false;
+			}
+		}
 
 		AssignMaterialToPieceMeshes();
 	}
 
 	private void AssignMaterialToPieceMeshes()
 	{
-		if (_pieces == null)
-		{
-			return;
-		}
-
 		foreach (var piece in _pieces)
 		{
 			if (piece != null)
 			{
-				piece.MaterialOverride = _piece_material;
+				piece.MaterialOverride = _pieceMaterial;
 			}
 		}
 	}
 
 	private void SetVisibleMesh(int level)
 	{
-		if (_pieces == null)
-		{
-			return;
-		}
-
 		if (_currentPiece != null)
 		{
 			_currentPiece.Visible = false;
 		}
 
-		_currentPiece = level < _pieces.Length ? _pieces[level] : null;
+		_currentPiece = level < _pieces.Count ? _pieces[level] : null;
 
 		if (_currentPiece != null)
 		{

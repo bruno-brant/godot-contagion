@@ -7,38 +7,39 @@
 [ext_resource type="ArrayMesh" uid="uid://bbbmrkfuy0bcj" path="res://Scenes/Cell/Meshes/SM_GamePieceLevel4.res" id="5_cfpbd"]
 [ext_resource type="ArrayMesh" uid="uid://bynpy3hf34plb" path="res://Scenes/Cell/Meshes/SM_CellBase.res" id="6_os40w"]
 
-[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_txbd1"]
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_70h28"]
+albedo_color = Color(0.831373, 0.8, 0.258824, 1)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_8xwkl"]
 size = Vector3(2, 1, 2)
 
 [node name="Cell" type="StaticBody3D"]
 script = ExtResource("1_ner8u")
-PieceColor = Color(1, 1, 1, 1)
+PieceColor = Color(0.831373, 0.8, 0.258824, 1)
 
 [node name="Piece" type="Node3D" parent="."]
 transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 0.3, 0)
 
 [node name="Level1" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(-4.80825e-08, -1.1, -4.37114e-08, 1.1, -4.80825e-08, -4.37114e-08, 4.80825e-08, -4.80825e-08, 1, 0, 0, 0)
-material_override = SubResource("StandardMaterial3D_txbd1")
+material_override = SubResource("StandardMaterial3D_70h28")
 mesh = ExtResource("2_q4bs6")
 
 [node name="Level2" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(1.05, 0, 0, 0, 1.05, 0, 0, 0, 1.05, 0, 0, 0)
 visible = false
-material_override = SubResource("StandardMaterial3D_txbd1")
+material_override = SubResource("StandardMaterial3D_70h28")
 mesh = ExtResource("3_q5u8v")
 
 [node name="Level3" type="MeshInstance3D" parent="Piece"]
 transform = Transform3D(-4.37114e-08, -1, -4.37114e-08, 1, -4.37114e-08, -4.37114e-08, 4.37114e-08, -4.37114e-08, 1, 0, 1.3181e-08, -0.301545)
 visible = false
-material_override = SubResource("StandardMaterial3D_txbd1")
+material_override = SubResource("StandardMaterial3D_70h28")
 mesh = ExtResource("4_uyek4")
 
 [node name="Level4" type="MeshInstance3D" parent="Piece"]
 visible = false
-material_override = SubResource("StandardMaterial3D_txbd1")
+material_override = SubResource("StandardMaterial3D_70h28")
 mesh = ExtResource("5_cfpbd")
 
 [node name="Base" type="Node3D" parent="."]
