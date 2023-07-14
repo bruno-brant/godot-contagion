@@ -1,7 +1,109 @@
-[gd_scene load_steps=2 format=3 uid="uid://cvx150vpx7mvq"]
+[gd_scene load_steps=13 format=3 uid="uid://cmfpre51tmpnv"]
 
-[ext_resource type="PackedScene" uid="uid://fqxurxh6g1x3" path="res://Scenes/Cell/Cell.tscn" id="1_esg4y"]
+[ext_resource type="PackedScene" uid="uid://bkmyogcvadiot" path="res://Scenes/Board/Board.tscn" id="1_r7866"]
+[ext_resource type="PackedScene" uid="uid://cvw0iml6j708j" path="res://Scenes/Player/Player.tscn" id="2_mulh3"]
+[ext_resource type="Script" path="res://PowerList.cs" id="3_t0wok"]
+[ext_resource type="Material" uid="uid://b70te21de5t6p" path="res://Materials/ChargingPowerMaterial.tres" id="4_x6546"]
+[ext_resource type="Shader" uid="uid://omadludn5esr" path="res://Power.tres" id="5_q1m8k"]
+[ext_resource type="Script" path="res://Scenes/PlayerController/PlayerController.cs" id="6_gktdv"]
+[ext_resource type="Shader" uid="uid://xoa4g8uplrue" path="res://Sky.tres" id="7_c4x5q"]
 
-[node name="Node3D" type="Node3D"]
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_w45fe"]
+shader = ExtResource("7_c4x5q")
 
-[node name="Cell" parent="." instance=ExtResource("1_esg4y")]
+[sub_resource type="Sky" id="Sky_503sy"]
+sky_material = SubResource("ShaderMaterial_w45fe")
+
+[sub_resource type="Environment" id="Environment_8sgck"]
+background_mode = 1
+sky = SubResource("Sky_503sy")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+reflected_light_source = 2
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_hphnj"]
+shader = ExtResource("5_q1m8k")
+shader_parameter/FloatParameter = 1.39
+shader_parameter/ColorParameter = Color(1, 1, 1, 1)
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_g52g7"]
+
+[node name="Root" type="Node"]
+
+[node name="Camera3D" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 10, 0)
+projection = 1
+current = true
+size = 15.7526
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_8sgck")
+
+[node name="Board" parent="." instance=ExtResource("1_r7866")]
+Radius = 4
+
+[node name="Players" type="Node" parent="."]
+
+[node name="Player1" parent="Players" instance=ExtResource("2_mulh3")]
+Color = Color(0.92549, 0, 0, 1)
+
+[node name="HUD" type="CanvasLayer" parent="Players/Player1"]
+
+[node name="PowerList" type="GridContainer" parent="Players/Player1/HUD"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("3_t0wok")
+ItemMaterial = ExtResource("4_x6546")
+
+[node name="Label" type="Label" parent="Players/Player1/HUD/PowerList"]
+material = SubResource("ShaderMaterial_hphnj")
+layout_mode = 2
+text = "Power 1"
+
+[node name="Label2" type="Label" parent="Players/Player1/HUD/PowerList"]
+layout_mode = 2
+text = "Power 2"
+
+[node name="PlayerController" type="Node3D" parent="." node_paths=PackedStringArray("CurrentPlayer")]
+script = ExtResource("6_gktdv")
+CurrentPlayer = NodePath("../Players/Player1")
+
+[node name="Ray" type="MeshInstance3D" parent="PlayerController"]
+mesh = SubResource("ImmediateMesh_g52g7")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="PlayerController"]
+
+[node name="DebugText" type="Label" parent="PlayerController/CanvasLayer"]
+unique_name_in_owner = true
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -23.0
+offset_right = 1153.0
+grow_vertical = 0
+vertical_alignment = 1
+text_overrun_behavior = 3
+
+[node name="SubViewportContainer" type="SubViewportContainer" parent="."]
+visible = false
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -416.0
+offset_top = -251.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="SubViewport" type="SubViewport" parent="SubViewportContainer"]
+handle_input_locally = false
+size = Vector2i(512, 256)
+render_target_update_mode = 0
+
+[node name="Camera3D" type="Camera3D" parent="SubViewportContainer/SubViewport"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 10)
+fov = 89.4

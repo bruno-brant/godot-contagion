@@ -1,0 +1,29 @@
+[gd_resource type="VisualShader" load_steps=2 format=3 uid="uid://xoa4g8uplrue"]
+
+[sub_resource type="VisualShaderNodeColorConstant" id="VisualShaderNodeColorConstant_rguts"]
+
+[resource]
+code = "shader_type sky;
+
+
+
+void sky() {
+// ColorConstant:2
+	vec4 n_out2p0 = vec4(1.000000, 1.000000, 1.000000, 1.000000);
+
+
+// Output:0
+	COLOR = vec3(n_out2p0.xyz);
+
+
+}
+"
+graph_offset = Vector2(-425.909, -300)
+mode = 3
+flags/use_half_res_pass = false
+flags/use_quarter_res_pass = false
+flags/disable_fog = false
+flags/use_debanding = false
+nodes/sky/2/node = SubResource("VisualShaderNodeColorConstant_rguts")
+nodes/sky/2/position = Vector2(214.944, 190.585)
+nodes/sky/connections = PackedInt32Array(2, 0, 0, 0)

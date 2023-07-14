@@ -16,6 +16,9 @@ public partial class Cell : StaticBody3D
 	// The pieces that make up the cell.
 	private readonly List<MeshInstance3D?> _pieces = new();
 
+	// The mesh of the base of the cell.
+	private readonly Lazy<MeshInstance3D> _baseMesh;
+
 	// The current piece being displayed.
 	private MeshInstance3D? _currentPiece;
 
@@ -33,6 +36,8 @@ public partial class Cell : StaticBody3D
 			SetVisibleMesh(newLevel);
 			EmitSignal(nameof(PowerLevelChangedEventHandler), newLevel);
 		};
+
+		_baseMesh = new Lazy<MeshInstance3D>(() => GetNode<MeshInstance3D>("Base/BaseMesh"));
 	}
 
 	/// <summary>
@@ -44,6 +49,18 @@ public partial class Cell : StaticBody3D
 	[Signal]
 	public delegate void PowerLevelChangedEventHandler(int newLevel);
 
+	/// <summary>
+	/// Gets or sets the material of the base of the cell.
+	/// </summary>
+	[Export]
+	public Material? BaseMaterial { get; set; }
+
+	/// <summary>
+	/// Gets or sets the material of the base of the cell when it is highlighted.
+	/// </summary>
+	[Export]
+	public Material? BaseHighlightedMaterial { get; set; }
+	
 	/// <summary>
 	/// Gets the board this cell belongs to.
 	/// </summary>
@@ -75,6 +92,7 @@ public partial class Cell : StaticBody3D
 	public void Highlight()
 	{
 		_pieceMaterial.EmissionEnabled = true;
+		_baseMesh.Value.MaterialOverride = BaseHighlightedMaterial;
 	}
 
 	/// <summary>
@@ -84,6 +102,7 @@ public partial class Cell : StaticBody3D
 	public void Dim()
 	{
 		_pieceMaterial.EmissionEnabled = false;
+		_baseMesh.Value.MaterialOverride = BaseMaterial;
 	}
 
 	/// <inheritdoc/>

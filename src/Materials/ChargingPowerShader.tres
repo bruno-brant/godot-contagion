@@ -5,7 +5,7 @@ expanded_output_ports = [0]
 input_name = "uv"
 
 [sub_resource type="VisualShaderNodeFloatParameter" id="VisualShaderNodeFloatParameter_1ufpv"]
-parameter_name = "FloatParameter"
+parameter_name = "Percent"
 default_value_enabled = true
 default_value = 0.5
 
@@ -24,7 +24,7 @@ constant = Color(0.00820202, 0.00820202, 0.00820202, 1)
 code = "shader_type canvas_item;
 render_mode blend_mix;
 
-uniform float FloatParameter = 0.5;
+uniform float Percent = 0.5;
 uniform vec4 Color : source_color = vec4(1.000000, 1.000000, 0.000000, 1.000000);
 
 
@@ -36,7 +36,7 @@ void fragment() {
 
 
 // FloatParameter:6
-	float n_out6p0 = FloatParameter;
+	float n_out6p0 = Percent;
 
 
 // ColorParameter:7
@@ -70,7 +70,6 @@ void fragment() {
 
 }
 "
-graph_offset = Vector2(20.9386, 56.9998)
 mode = 1
 flags/light_only = false
 nodes/fragment/0/position = Vector2(1200, 280)

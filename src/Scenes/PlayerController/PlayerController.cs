@@ -2,9 +2,10 @@
 
 namespace Contation.Scenes.PlayerController;
 
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using Contagion.Scenes.Board.Scripts;
 using Contagion.Scenes.Cell.Scripts;
-using System.Diagnostics;
 
 /// <summary>
 /// Centralizes the processing of player input.
@@ -27,14 +28,15 @@ public partial class PlayerController : Node3D
 	private StandardMaterial3D _redMaterial = new() { AlbedoColor = Colors.Red };
 
 	/// <summary>
-	/// Gets or sets the color for the player.
+	/// Gets or sets the current player.
 	/// </summary>
+	[Export]
 	public Player? CurrentPlayer { get; set; }
 
 	/// <inheritdoc/>
 	public override void _Input(InputEvent @event)
 	{
-		Debug.Assert(CurrentPlayer != null, "Player must be always set in the controller");
+		AssertPlayerNotNull();
 
 		if (@event is InputEventMouse eventMouse)
 		{
@@ -49,8 +51,8 @@ public partial class PlayerController : Node3D
 
 	private void ApplyPowerToCell()
 	{
-		Debug.Assert(CurrentPlayer != null, "Player must be always set in the controller");
-		
+		AssertPlayerNotNull();
+
 		GD.Print("Applying power...");
 
 		if (_selectedCell == null)
@@ -129,5 +131,12 @@ public partial class PlayerController : Node3D
 		{
 			label.Text = message;
 		}
+	}
+
+	[Conditional("DEBUG")]
+	[MemberNotNull(nameof(CurrentPlayer))]
+	private void AssertPlayerNotNull()
+	{
+		Debug.Assert(CurrentPlayer != null, "Player must be always set in the controller");
 	}
 }
