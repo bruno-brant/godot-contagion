@@ -32,7 +32,7 @@ public partial class Cell : StaticBody3D
 	{
 		PowerLevel.LevelChanged += (newLevel, player) =>
 		{
-			_player = player;
+			Player = player;
 			SetVisibleMesh(newLevel);
 			EmitSignal(nameof(PowerLevelChangedEventHandler), newLevel);
 		};
